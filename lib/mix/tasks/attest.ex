@@ -15,6 +15,7 @@ defmodule Mix.Tasks.Attest do
 
     # Run the actual input.
     {:ok, input_data} = File.read("priv/day#{day}/input.txt")
+
     execute(day, part, String.split(input_data, "\n", trim: true))
     |> IO.inspect(label: "Day #{day}, Part #{part} Results")
   end
@@ -26,14 +27,18 @@ defmodule Mix.Tasks.Attest do
   end
 
   defp parse_example(file) do
-    {:ok, file_data}= File.read(file)
-    [input, output] = file_data
-                      |> String.split("\n", trim: true)
-    input = input
-            |> String.split(",", trim: true)
-            |> Enum.map(&String.trim/1)
-    %{input: input,
-      output: output}
+    {:ok, file_data} = File.read(file)
+
+    [input, output] =
+      file_data
+      |> String.split("\n", trim: true)
+
+    input =
+      input
+      |> String.split(",", trim: true)
+      |> Enum.map(&String.trim/1)
+
+    %{input: input, output: output}
   end
 
   defp run_example(day, part, input, output) do
@@ -42,9 +47,11 @@ defmodule Mix.Tasks.Attest do
   end
 
   defp execute(day, part, input) do
-    module = Advent2018
-             |> Module.concat("Day#{day}")
-             |> Module.concat("Part#{part}")
+    module =
+      Advent2018
+      |> Module.concat("Day#{day}")
+      |> Module.concat("Part#{part}")
+
     apply(module, :execute, [input])
   end
 end
