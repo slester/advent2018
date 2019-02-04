@@ -2,14 +2,12 @@ ExUnit.start()
 
 defmodule Mix.Tasks.Attest do
   use Mix.Task
-  require Logger
   use ExUnit.Case
 
   @shortdoc "Run tests of a particular part for a given day."
   def run([day, part]) do
-    tests = Path.wildcard("priv/day#{day}/part#{part}/ex*.txt")
     # Run all the tests to see if we should run the actual input.
-    tests
+    Path.wildcard("priv/day#{day}/part#{part}/ex*.txt")
     |> Enum.map(&parse_example/1)
     |> Enum.map(fn %{input: input, output: output} -> run_example(day, part, input, output) end)
 
@@ -29,9 +27,7 @@ defmodule Mix.Tasks.Attest do
   defp parse_example(file) do
     {:ok, file_data} = File.read(file)
 
-    [input, output] =
-      file_data
-      |> String.split("\n", trim: true)
+    [input, output] = String.split(file_data, "\n", trim: true)
 
     input =
       input
@@ -47,10 +43,7 @@ defmodule Mix.Tasks.Attest do
   end
 
   defp execute(day, part, input) do
-    module =
-      Advent2018
-      |> Module.concat("Day#{day}")
-      |> Module.concat("Part#{part}")
+    module = Module.concat(Advent2018, "Day#{day}.Part#{part}")
 
     apply(module, :execute, [input])
   end
